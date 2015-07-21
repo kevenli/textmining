@@ -1,0 +1,10 @@
+*.log
+*.pot
+*.class
+*.jar
+bin
+lib
+termFreq
+199803.txt
+runtime.config
+.settings
