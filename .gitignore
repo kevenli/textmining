@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 *.log
 *.pot
 *.class
@@ -8,3 +9,17 @@ termFreq
 199803.txt
 runtime.config
 .settings
+=======
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+>>>>>>> 6e1f154d468b972c4834ca5a57f8b2d52ccbed9a
