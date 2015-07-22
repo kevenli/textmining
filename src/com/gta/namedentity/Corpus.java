@@ -275,15 +275,14 @@ public class Corpus {
 			analyzer.close();
 			
 			int size = preString.size();
-			
 			if (preString.size() == 0) {
 				size += 1;
 				int []newList = new int[size];
 				newList[0] = 0;
 				return newList;
 			}
+			
 			int []list = new int[size];
-			System.out.println(preString.size());
 			int index = 0;
 			for (String t : preString) {
 				System.out.print(t);
