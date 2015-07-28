@@ -17,11 +17,12 @@ import java.util.concurrent.TimeoutException;
 
 import com.gta.simhash.SimHash;
 import com.gta.affective.Segment;
+import com.gta.namedentity.Corpus;
 
 public class DataPath {
 	private int threadId;
 
-	public DataPath(SimHash hash, Segment segment) {
+	public DataPath(Segment segment, Corpus corpus) {
 		FDSAPI fdsAPI = new FDSAPI();
 		File file = new File("runtime.config");
 		Connection conn = null;
@@ -53,7 +54,7 @@ public class DataPath {
 			channel.queueBind("ambiguity", exchangeName, obj.getString("subscript_topic"));
 
 			QueueingConsumer consumer = new QueueingConsumer(channel);
-			channel.basicConsume("ambiguity", true, consumer);
+			channel.basicConsume("ambiguity", false, consumer);
 			while (true) 
 			{
 				try {
@@ -62,16 +63,17 @@ public class DataPath {
 					JSONObject element = JSONObject.fromObject(message);
 					threadId = new Integer(element.getString("id"));
 					String text = fdsAPI.getWebContent(threadId);
-					System.out.println(text);
+//					System.out.println(text);
 					if (text != null && !text.equals("")) 
 					{
-						// corpus.getResult(title);
-						SimHash hashData = new SimHash(text, 64, 8);
+					    corpus.getResult(text);
+//						SimHash hashData = new SimHash(text, 64, 8);
 						System.out.println(segment.analysis(text));
-						hash.getResult(hashData);
+//                      hash.getResult(hashData);
 						System.out.println("***************************************************************************************");
 						System.out.println("***************************************************************************************");
 					}
+					channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
 				} catch (ShutdownSignalException e) {
 					e.printStackTrace();
                 } catch (InterruptedException e) {

@@ -260,7 +260,7 @@ public class Corpus {
 	/**
 	 * 获取观察者序列
 	 * @param s 待处理字符串
-	 * @return 观察者序列标注
+	 * @return 观察者序列待标注
 	 */
 	public int[] getObSeq(String s) {
 		List<String> preString = new ArrayList<String>();
@@ -302,6 +302,7 @@ public class Corpus {
 		return null;
 	}
 	
+		
 	/**
 	 * 词性标注译码
 	 * @param s 待处理字符串
