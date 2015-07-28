@@ -18,11 +18,12 @@ import java.util.concurrent.TimeoutException;
 import com.gta.simhash.SimHash;
 import com.gta.affective.Segment;
 import com.gta.namedentity.Corpus;
+import com.gta.cluster.DBScan;
 
 public class DataPath {
 	private int threadId;
 
-	public DataPath(Segment segment, Corpus corpus) {
+	public DataPath(DBScan dbscan) {
 		FDSAPI fdsAPI = new FDSAPI();
 		File file = new File("runtime.config");
 		Connection conn = null;
@@ -62,14 +63,16 @@ public class DataPath {
 					String message = new String(delivery.getBody());
 					JSONObject element = JSONObject.fromObject(message);
 					threadId = new Integer(element.getString("id"));
-					String text = fdsAPI.getWebContent(threadId);
-//					System.out.println(text);
+					String text = fdsAPI.getWebTitle(threadId);
+					System.out.println(text);
 					if (text != null && !text.equals("")) 
 					{
-					    corpus.getResult(text);
+//					    corpus.getResult(text);
 //						SimHash hashData = new SimHash(text, 64, 8);
-						System.out.println(segment.analysis(text));
+//						System.out.println(segment.analysis(text));
 //                      hash.getResult(hashData);
+						dbscan.addDataNode(text);
+						dbscan.analysis();
 						System.out.println("***************************************************************************************");
 						System.out.println("***************************************************************************************");
 					}

@@ -56,5 +56,16 @@ public class DataNode {
 		
 		return null;
 	}
+	
+	
+	public boolean equals(DataNode node)
+	{
+		boolean ret = false;
+		if (terms.size() == node.getAllElements().size())
+		{
+			ret = true;
+		}
+		return ret;
+	}
 
 }

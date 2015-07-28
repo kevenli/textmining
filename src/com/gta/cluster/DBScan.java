@@ -7,24 +7,44 @@ import com.gta.cosine.TextCosine;
 import com.gta.cosine.ElementDict;
 
 public class DBScan {
-	private double  eps;
-	private int     minPts;
-	private TextCosine cosine;
-	
+	private double         eps;
+	private int            minPts;
+	private TextCosine     cosine;
+	private int            threshold;
+	private List<DataNode> dataNodes;
+	private int            delta;
 	
 	public DBScan()
 	{
 		this.eps = 0.20;
 		this.minPts = 3;
+		this.threshold = 10000;
 		this.cosine = new TextCosine();
+		this.delta = 0;
+		dataNodes = new ArrayList<DataNode>();
 	}
 	
 	
-	public DBScan(double eps, int minPts) 
+	public DBScan(double eps, int minPts, int threshold) 
 	{
 		this.eps = eps;
 		this.minPts = minPts;
+		this.threshold = threshold;
 		this.cosine = new TextCosine();
+		this.delta = 0;
+		dataNodes = new ArrayList<DataNode>();
+	}
+	
+	
+	public void setThreshold(int threshold)
+	{
+		this.threshold = threshold;
+	}
+	
+	
+	public int getThreshold()
+	{
+		return threshold;
 	}
 	
 	
@@ -56,6 +76,7 @@ public class DBScan {
 			list1 = cosine.assignWeight(mergeList, vec1);
 			list2 = cosine.assignWeight(mergeList, vec2);
 			countDistance = cosine.countCosSimilariry(list1, list2);
+			System.out.println(countDistance);
 			if (countDistance >= eps)
 			{
 				neighbors.add(node);
@@ -65,7 +86,7 @@ public class DBScan {
 	}
 	
 	
-	public int cluster(List<DataNode> nodes)
+	public List<DataNode> cluster(List<DataNode> nodes)
 	{
 		int category = 1;
 		for (DataNode node : nodes)
@@ -80,16 +101,17 @@ public class DBScan {
 				}
 				else
 				{
-					expandCluster(node, neighbors, category, nodes);
+					nodes = expandCluster(node, neighbors, category, nodes);
 				}
 			}
 			category ++;
 		}
-		return category;
+		
+		return nodes;
 	}
 	
 	
-	public void expandCluster(DataNode p, List<DataNode> neighbors, int category, List<DataNode> nodes)
+	public List<DataNode> expandCluster(DataNode p, List<DataNode> neighbors, int category, List<DataNode> nodes)
 	{
 		p.setCatagory(category);
 		for (DataNode node : neighbors) 
@@ -104,15 +126,47 @@ public class DBScan {
 				}
 			}
 			
-			if (node.getCategory() < 0) 
+			if (node.getCategory() <= 0) 
 			{
 				node.setCatagory(category);
 			}
 		}
+		
+		return nodes;
 	}
 	
 	
+	public void showCluster(List<DataNode> nodes)
+	{
+		for (DataNode node : nodes) 
+		{
+			for (ElementDict e: node.getAllElements())
+			{
+				System.out.print(e.getTerm() + "  ");
+			}
+			System.out.println(node.getCategory());
+		}
+	}
 	
+	
+	public void addDataNode(String s) 
+	{   
+		List<ElementDict> ed = cosine.tokenizer(s);
+		DataNode dataNode = new DataNode(ed);
+		dataNodes.add(dataNode);
+		delta ++;
+	}
+	
+	
+	public void analysis() 
+	{
+		if (delta == threshold)
+		{
+			dataNodes = cluster(dataNodes);
+			showCluster(dataNodes);
+			delta = 0;
+		}
+	}
 	
 
 }

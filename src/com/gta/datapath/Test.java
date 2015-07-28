@@ -8,17 +8,20 @@ import java.io.IOException;
 import com.gta.simhash.SimHash;
 import com.gta.affective.Segment;
 import com.gta.namedentity.Corpus;
+import com.gta.cluster.DBScan;
+
 public class Test {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Corpus corpus = new Corpus();
+//		Corpus corpus = null;
 		Test test = new Test();
-		String str = test.getFileContent("text1.txt");
-		SimHash hash = new SimHash(str, 64, 8);
+//		String str = test.getFileContent("text1.txt");
+//		SimHash hash = new SimHash(str, 64, 8);
 //		long startTime = System.currentTimeMillis();
-		Segment segment = new Segment();
-		new DataPath(segment, corpus);
+//		Segment segment = new Segment();
+		DBScan dbscan = new DBScan(0.20, 3, 10);
+		new DataPath(dbscan);
 /*	
 		FDSAPI api = new FDSAPI();
 		api.getElement(api.getThread(101678));
