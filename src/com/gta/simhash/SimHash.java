@@ -166,6 +166,7 @@ public class SimHash {
 		return tot;
 	}
 	
+	
 	public String getFingerPrint(String str)
 	{
 		int len = str.length();

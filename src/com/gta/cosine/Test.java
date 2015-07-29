@@ -16,6 +16,7 @@ public class Test {
 		
 		String str4 = "16省份出台户籍制度改革意见";
 		String str5 = "16省份出台户籍制度改革意见 将落实居住证制度";
+		
 		String str6 = "M5W9开头假币再现长春街头 流通全国多地逾半年";
 		String str7 = "M5W9开头百元假币现长春街头 流通全国多地逾半年";
 		

@@ -101,7 +101,8 @@ public class DBScan {
 				}
 				else
 				{
-					nodes = expandCluster(node, neighbors, category, nodes);
+					node.setCatagory(category);
+					expandCluster(neighbors, category, nodes);
 				}
 			}
 			category ++;
@@ -111,9 +112,8 @@ public class DBScan {
 	}
 	
 	
-	public List<DataNode> expandCluster(DataNode p, List<DataNode> neighbors, int category, List<DataNode> nodes)
+	public void expandCluster(List<DataNode> neighbors, int category, List<DataNode> nodes)
 	{
-		p.setCatagory(category);
 		for (DataNode node : neighbors) 
 		{
 			if (!node.getVisitLabel()) 
@@ -122,17 +122,15 @@ public class DBScan {
 				List<DataNode> newNeighbors = getNeighbors(node, nodes);
 				if (newNeighbors.size() >= minPts)
 				{
-					neighbors.addAll(newNeighbors);
+					expandCluster(newNeighbors, category, nodes);
 				}
 			}
 			
-			if (node.getCategory() <= 0) 
+			if (node.getCategory() <= 0)   // not be any of category
 			{
 				node.setCatagory(category);
 			}
 		}
-		
-		return nodes;
 	}
 	
 	
@@ -144,7 +142,8 @@ public class DBScan {
 			{
 				System.out.print(e.getTerm() + "  ");
 			}
-			System.out.println(node.getCategory());
+			System.out.println();
+			System.out.println("ËùÊôÀà±ð£º "+ node.getCategory());
 		}
 	}
 	
@@ -160,7 +159,7 @@ public class DBScan {
 	
 	public void analysis() 
 	{
-		if (delta == threshold)
+		if (delta >= threshold)
 		{
 			dataNodes = cluster(dataNodes);
 			showCluster(dataNodes);
