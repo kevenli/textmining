@@ -57,11 +57,11 @@ public class TextCosine {
 	
 	
 	public int isContain(String str, List<ElementDict> list) {
-		for (ElementDict td : list) {
-			if (td.getTerm().equals(str)) {
-				return list.indexOf(td);
-			} else if (map.get(td.getTerm())!= null && map.get(td.getTerm()).equals(str)) {
-				return list.indexOf(td);
+		for (ElementDict ed : list) {
+			if (ed.getTerm().equals(str)) {
+				return list.indexOf(ed);
+			} else if (map.get(ed.getTerm())!= null && map.get(ed.getTerm()).equals(str)) {
+				return list.indexOf(ed);
 			}
 		}
 		return -1;
@@ -70,19 +70,19 @@ public class TextCosine {
 	
 	public List<String> mergeTerms(List<ElementDict> list1, List<ElementDict> list2) {
 		List<String> list = new ArrayList<String>();
-		for (ElementDict td : list1) {
-			if (!list.contains(td.getTerm())) {
-				list.add(td.getTerm());
-			} else if (!list.contains(map.get(td.getTerm()))) {
-				list.add(td.getTerm());
+		for (ElementDict ed : list1) {
+			if (!list.contains(ed.getTerm())) {
+				list.add(ed.getTerm());
+			} else if (!list.contains(map.get(ed.getTerm()))) {
+				list.add(ed.getTerm());
 			}
 		}
 		
-		for (ElementDict td : list2) {
-			if (!list.contains(td.getTerm())) {
-				list.add(td.getTerm());
-			} else if (!list.contains(map.get(td.getTerm()))) {
-				list.add(td.getTerm());
+		for (ElementDict ed : list2) {
+			if (!list.contains(ed.getTerm())) {
+				list.add(ed.getTerm());
+			} else if (!list.contains(map.get(ed.getTerm()))) {
+				list.add(ed.getTerm());
 			}
 		}
 		return list;
@@ -152,13 +152,13 @@ public class TextCosine {
 		List<Integer> vecList = new ArrayList<Integer>(list.size());
 		boolean isEqual = false;
 		for (String str : list) {
-			for (ElementDict td : list1) {
-				if (td.getTerm().equals(str)) {
+			for (ElementDict ed : list1) {
+				if (ed.getTerm().equals(str)) {
 					isEqual = true;
-					vecList.add(new Integer(td.getFreq()));
-				} else if (map.get(td.getTerm())!= null && map.get(td.getTerm()).equals(str)) {
+					vecList.add(new Integer(ed.getFreq()));
+				} else if (map.get(ed.getTerm())!= null && map.get(ed.getTerm()).equals(str)) {
 					isEqual = true;
-					vecList.add(new Integer(td.getFreq()));
+					vecList.add(new Integer(ed.getFreq()));
 				}
 			}
 			
@@ -195,7 +195,8 @@ public class TextCosine {
 	
 	
 	public boolean getResult(double scores) {
-		if (scores >= 0.75)
+		System.out.println(scores);
+		if (scores >= 0.85)
 			return true;
 		else 
 			return false;
@@ -203,6 +204,7 @@ public class TextCosine {
 	
 	
 	public boolean getEasyResult(double scores) {
+		System.out.println(scores);
 		if (scores >= 0.75)
 			return true;
 		else 

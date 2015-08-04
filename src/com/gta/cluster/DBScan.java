@@ -76,7 +76,7 @@ public class DBScan {
 			list1 = cosine.assignWeight(mergeList, vec1);
 			list2 = cosine.assignWeight(mergeList, vec2);
 			countDistance = cosine.countCosSimilariry(list1, list2);
-			System.out.println(countDistance);
+//			System.out.println(countDistance);
 			if (countDistance >= eps)
 			{
 				neighbors.add(node);
@@ -138,7 +138,8 @@ public class DBScan {
 	{
 		for (DataNode node : nodes) 
 		{
-			for (ElementDict e: node.getAllElements())
+			List<ElementDict> ed = node.getAllElements();
+			for (ElementDict e: ed)
 			{
 				System.out.print(e.getTerm() + "  ");
 			}
@@ -161,8 +162,7 @@ public class DBScan {
 	{
 		if (delta >= threshold)
 		{
-			dataNodes = cluster(dataNodes);
-			showCluster(dataNodes);
+			showCluster(cluster(dataNodes));
 			delta = 0;
 		}
 	}

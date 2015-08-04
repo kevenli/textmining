@@ -6,10 +6,7 @@ public class Test {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-/*		
-		String str1 = "习近平考察杭州高新企业海康威视 谈爱护高端尖子人才";
-		String str2 = "习近平考察杭州 谈爱护高端尖子人才";
-*/
+
 		String str1 = "习近平接见驻浙部队干部：贯彻强军目标用实劲";
 		String str2 = "习近平在接见驻浙部队领导干部时强调 贯彻强军目标出实招用实劲 努力开创部队建设新局面";
 		String str3 = "习近平：贯彻强军目标出实招用实劲 努力开创部队建设新局面";
@@ -33,10 +30,16 @@ public class Test {
 		String str15 = "台湾居民明日起持台胞证可通关 无需办理签注";
 		String str16 = "台湾居民明日起持台胞证可通关";
 		String str17 = "明起台胞来京无需办理签注 电子台胞证年内实施";
+		
+		String str18 = "习近平考察杭州高新企业海康威视 谈爱护高端尖子人才";
+		String str19 = "习近平考察杭州 谈爱护高端尖子人才";
+		
+		String str20 = "云南景洪市发生3.2级地震，震源深度5千米 ";
+		String str21 = "山东烟台附近海域发生4.0级地震，震源深度5千米 ";
 
 		TextCosine tm = new TextCosine();
-		List<ElementDict> td1 = tm.tokenizer(str16);
-		List<ElementDict> td2 = tm.tokenizer(str17);
+		List<ElementDict> td1 = tm.tokenizer(str20);
+		List<ElementDict> td2 = tm.tokenizer(str21);
 		if (tm.anslysisTerms(td1, td2) > 0)
 		{
 			System.out.println("match");
