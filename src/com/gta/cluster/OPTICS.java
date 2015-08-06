@@ -97,7 +97,7 @@ public class OPTICS {
 				if (cd != -1)
 				{
 					point.setCoreDistance(cd);
-					Queue<DataPoint> seeds = new PriorityQueue<DataPoint>(new Comparator<DataPoint>() {
+					Queue<DataPoint> seeds = new PriorityQueue<DataPoint>(11, new Comparator<DataPoint>() {
 						    public int compare (DataPoint dp1, DataPoint dp2) {
 						    	double rd = dp1.getReachableDistance() - dp2.getReachableDistance();
 						    	if (rd < 0) {
