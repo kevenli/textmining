@@ -4,7 +4,6 @@
 *.class
 *.jar
 bin
-lib
 termFreq
 199801.txt
 runtime.config
