@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 
 public class Test {
 
@@ -21,7 +23,7 @@ public class Test {
 		String text = null;
 		try {
 			File file= new File(fileName);
-			BufferedReader br = new BufferedReader(new FileReader(file));
+			BufferedReader br = Files.newBufferedReader(file.toPath(), Charset.forName("GBK"));
 			String s = null;
 			StringBuilder sb = new StringBuilder();
 			while ((s = br.readLine()) != null) 

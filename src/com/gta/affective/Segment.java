@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.BufferedReader;
 //import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -13,20 +15,21 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.regex.Pattern;
+
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
 public class Segment {
-	private final String regex = "[¡££¿£¡]";
-	private String[] strEnum;                   // ¾ä×ÓÊı×é
-	private String[] negtiveEnum;               // ·ñ¶¨´ÊÊı×é
-	private Set<ConjunctionClassify> conSet;    // Á¬´Ê¼¯ºÏ
-	private Map<String, Dict> polarMap;         // ¼«ĞÔ´Ê»ã¿â
-	private Map<Integer, Float> weightMap;      // Á¬´ÊÈ¨ÖØ¿â
-	private Map<String, EntityDict> companyMap; // ¹«Ë¾´Ê»ã¿â
-	private int conIndex;                       // Á¬´ÊÎ»ÖÃ
-	private int classify;                       // Á¬´ÊÀàĞÍ
+	private final String regex = "[ã€‚ï¼Ÿï¼]";
+	private String[] strEnum;                   // å¥å­æ•°ç»„
+	private String[] negtiveEnum;               // å¦å®šè¯æ•°ç»„
+	private Set<ConjunctionClassify> conSet;    // è¿è¯é›†åˆ
+	private Map<String, Dict> polarMap;         // ææ€§è¯æ±‡åº“
+	private Map<Integer, Float> weightMap;      // è¿è¯æƒé‡åº“
+	private Map<String, EntityDict> companyMap; // å…¬å¸è¯æ±‡åº“
+	private int conIndex;                       // è¿è¯ä½ç½®
+	private int classify;                       // è¿è¯ç±»å‹
 	private int[] objCount;
 	private float[] affectCount;
 	
@@ -40,15 +43,15 @@ public class Segment {
 
 	
 	/**
-	 * ³õÊ¼»¯·ñ¶¨´ÊÁĞ±í
+	 * åˆå§‹åŒ–å¦å®šè¯åˆ—è¡¨
 	 */
 	public void initNegtive() {
 		try {
 			File file = new File("negtive.txt");
-			BufferedReader br = new BufferedReader(new FileReader(file));
+			BufferedReader br = Files.newBufferedReader(file.toPath(), Charset.forName("GBK"));
 			String s = null;
 			if ((s = br.readLine())!= null) {
-				negtiveEnum = s.split("£¬");
+				negtiveEnum = s.split("ï¼Œ");
 			}
 			br.close();
 		} catch (IOException e) {
@@ -58,17 +61,17 @@ public class Segment {
 
 	
 	/**
-	 * ³õÊ¼»¯Á¬´ÊÁĞ±í
+	 * åˆå§‹åŒ–è¿è¯åˆ—è¡¨
 	 */
 	public void initConjunction() {
 		conSet = new HashSet<ConjunctionClassify>();
 		try {
 			File file = new File("conjunction.txt");
-			BufferedReader br = new BufferedReader(new FileReader(file));
+			BufferedReader br = Files.newBufferedReader(file.toPath(), Charset.forName("GBK"));
 			String s = null;
 			while ((s = br.readLine())!= null) {
 				String []elementEnum = s.split("\t");
-				String []conjunctions = elementEnum[0].split("£¬");
+				String []conjunctions = elementEnum[0].split("ï¼Œ");
 				conSet.add(new ConjunctionClassify(conjunctions[0], conjunctions[1], Integer.parseInt(elementEnum[1])));
 			}
 			br.close();
@@ -79,13 +82,13 @@ public class Segment {
 
 	
 	/**
-	 * ³õÊ¼»¯Çé¸Ğ¼«ĞÔ´Ê»ã¿â
+	 * åˆå§‹åŒ–æƒ…æ„Ÿææ€§è¯æ±‡åº“
 	 */
 	public void initPolar() {
 		polarMap = new HashMap<String, Dict>();
 		try {
 			File file = new File("dict.txt");
-			BufferedReader br = new BufferedReader(new FileReader(file));
+			BufferedReader br = Files.newBufferedReader(file.toPath(), Charset.forName("GBK"));
 			String s = null;
 			while ((s = br.readLine()) != null) {
 				String []element = s.split("\t");
@@ -99,7 +102,7 @@ public class Segment {
 
 	
 	/**
-	 * ³õÊ¼»¯¹ØÁª´ÊµÄÈ¨ÖØ
+	 * åˆå§‹åŒ–å…³è”è¯çš„æƒé‡
 	 */
 	public void initWeight() {
 		weightMap = new HashMap<Integer, Float>();
@@ -146,7 +149,7 @@ public class Segment {
 	
 
 	/**
-	 * ĞŞÕıÉÏÊĞ¹«Ë¾Ãû×Ö
+	 * ä¿®æ­£ä¸Šå¸‚å…¬å¸åå­—
 	 * @param str
 	 * @return the correct string of the company
 	 */
@@ -158,7 +161,7 @@ public class Segment {
 			s = str.substring(2);
 		} else if (str.startsWith("S")) {
 			s = str.substring(1);
-		} else if (str.endsWith("£Á") || str.endsWith("A") ||str.endsWith("£Â") ||str.endsWith("B")) {
+		} else if (str.endsWith("ï¼¡") || str.endsWith("A") ||str.endsWith("ï¼¢") ||str.endsWith("B")) {
 			s = str.substring(0, str.length()-1);
 		}
 		s = tripWhiteSpace(s);
@@ -167,7 +170,7 @@ public class Segment {
 	
 
 	/**
-	 * ½«×Ö·ûÖĞÇ±ÔÚ¿Õ¸ñÈ¥µô
+	 * å°†å­—ç¬¦ä¸­æ½œåœ¨ç©ºæ ¼å»æ‰
 	 * @param s
 	 * @return the last string of the company
 	 */
@@ -213,8 +216,8 @@ public class Segment {
 
 	
 	/**
-	 * ·ÖÎöÎÄ±¾Êı¾İ£¬»ñÈ¡ÎÄ±¾Çé¸ĞÆÀ·Ö
-	 * @param str  ÎÄ±¾Êı¾İ
+	 * åˆ†ææ–‡æœ¬æ•°æ®ï¼Œè·å–æ–‡æœ¬æƒ…æ„Ÿè¯„åˆ†
+	 * @param str  æ–‡æœ¬æ•°æ®
 	 */
 	public float analysis(String str) {
 		Pattern p = Pattern.compile(regex);
@@ -237,9 +240,9 @@ public class Segment {
 	}
 	
 	/**
-	 * ½«¾ä×Ó½øĞĞÖØ¶÷·Ö´ÊÇĞ·Ö£¬»ñÈ¡´ÊÔªÁĞ±í
+	 * å°†å¥å­è¿›è¡Œé‡æ©åˆ†è¯åˆ‡åˆ†ï¼Œè·å–è¯å…ƒåˆ—è¡¨
 	 * @param str
-	 * @return ÖĞÎÄ·Ö´ÊÁĞ±í
+	 * @return ä¸­æ–‡åˆ†è¯åˆ—è¡¨
 	 */
 	public List<String> tokenizer(String str) {
 		List<String> list = new ArrayList<String>();
@@ -259,9 +262,9 @@ public class Segment {
 	}
 	
 	/**
-	 * ²éÑ¯´ıÆ¥Åä×Ö´®ÊÇ·ñÔÚ¸Ã¾ä×ÓÖĞ
-	 * @param list ¾ä×Ó¼¶·Ö´Ê´Ê×é
-	 * @param words ´ı²éÑ¯×Ö´®
+	 * æŸ¥è¯¢å¾…åŒ¹é…å­—ä¸²æ˜¯å¦åœ¨è¯¥å¥å­ä¸­
+	 * @param list å¥å­çº§åˆ†è¯è¯ç»„
+	 * @param words å¾…æŸ¥è¯¢å­—ä¸²
 	 * @return
 	 */
 	public int findKeyCompany(List<String> list, String words) {
@@ -306,7 +309,7 @@ public class Segment {
 	
 	
 	/**
-	 * ÅĞ¶Ï¾ä×ÓÖĞÊÇ·ñ´æÔÚÁ¬´Ê£¬Èô´æÔÚÁ¬´Ê£¬Ôò½«Á¬´ÊÖĞºóÒ»¸ö¹Ø¼ü´ÊÎ»ÖÃ½øĞĞ±£´æ£¬Í¬Ê±È·¶¨Á¬´ÊËùÈ·¶¨µÄ¹ØÏµ·ÖÀà
+	 * åˆ¤æ–­å¥å­ä¸­æ˜¯å¦å­˜åœ¨è¿è¯ï¼Œè‹¥å­˜åœ¨è¿è¯ï¼Œåˆ™å°†è¿è¯ä¸­åä¸€ä¸ªå…³é”®è¯ä½ç½®è¿›è¡Œä¿å­˜ï¼ŒåŒæ—¶ç¡®å®šè¿è¯æ‰€ç¡®å®šçš„å…³ç³»åˆ†ç±»
 	 * @param list
 	 */
 	public void findConjunction (List<String> list) {
@@ -361,9 +364,9 @@ public class Segment {
 
 	
 	/**
-	 * ÅĞ¶Ï¾ä×ÓÖĞÊÇ·ñ´æÔÚ·ñ¶¨´Ê£¬Èô´æÔÚÔò½«·ñ¶¨´ÊÎ»ÖÃÌí¼Ó½øÁĞ±íÖĞ
+	 * åˆ¤æ–­å¥å­ä¸­æ˜¯å¦å­˜åœ¨å¦å®šè¯ï¼Œè‹¥å­˜åœ¨åˆ™å°†å¦å®šè¯ä½ç½®æ·»åŠ è¿›åˆ—è¡¨ä¸­
 	 * @param list
-	 * @return ·ñ¶¨´ÊÁĞ±í
+	 * @return å¦å®šè¯åˆ—è¡¨
 	 */
 	public List<Integer> findNegative(List<String> list) {
 		List<Integer> neglist = new ArrayList<Integer>();
@@ -381,9 +384,9 @@ public class Segment {
 
 	
 	/**
-	 * ÅĞ¶ÏÊÇ·ñ´æÔÚË«ÖØ·ñ¶¨£¬Èô´æÔÚÔòÒÆ³ıË«ÖØ·ñ¶¨´ÊµÄÎ»ÖÃĞÅÏ¢
+	 * åˆ¤æ–­æ˜¯å¦å­˜åœ¨åŒé‡å¦å®šï¼Œè‹¥å­˜åœ¨åˆ™ç§»é™¤åŒé‡å¦å®šè¯çš„ä½ç½®ä¿¡æ¯
 	 * @param neglist
-	 * @return ·ñ¶¨´ÊÁĞ±í
+	 * @return å¦å®šè¯åˆ—è¡¨
 	 */
 	public List<Integer> assertNegative(List<Integer> neglist) {
 		List<Integer> newlist = new ArrayList<Integer>();
@@ -408,12 +411,12 @@ public class Segment {
 
 	
 	/**
-	 * ¼ÆËã´ÊÔªµÄÇé¸Ğ¼«ĞÔÆÀ·Ö
-	 * @param level       ´Ê¿âÖĞµÄÇé¸ĞÇ¿¶È
-	 * @param judge       ´Ê¿âÖĞµÄ¼«ĞÔ
-	 * @param weight      ¾ä×ÓÇ°ºóËùÕ¼±ÈÖØ
-	 * @param converse    ÊÇ·ñ¼«ĞÔ·´×ª
-	 * @return  ´ÊÔªµÄÇãÏòĞÔ¼ÆËã½á¹û
+	 * è®¡ç®—è¯å…ƒçš„æƒ…æ„Ÿææ€§è¯„åˆ†
+	 * @param level       è¯åº“ä¸­çš„æƒ…æ„Ÿå¼ºåº¦
+	 * @param judge       è¯åº“ä¸­çš„ææ€§
+	 * @param weight      å¥å­å‰åæ‰€å æ¯”é‡
+	 * @param converse    æ˜¯å¦ææ€§åè½¬
+	 * @return  è¯å…ƒçš„å€¾å‘æ€§è®¡ç®—ç»“æœ
 	 */
 	public float countPolar(short level, short judge, float weight, boolean converse) {
 		float sum = 0;
@@ -437,10 +440,10 @@ public class Segment {
 	}
 
 	/**
-	 * ¼ÆËã¾ä×ÓµÄÇé¸Ğ¼«ĞÔÆÀ·Ö
+	 * è®¡ç®—å¥å­çš„æƒ…æ„Ÿææ€§è¯„åˆ†
 	 * @param list
 	 * @param neglist
-	 * @return ¾ä×ÓµÄ¼«ĞÔÆÀ·Ö
+	 * @return å¥å­çš„ææ€§è¯„åˆ†
 	 */
 	public float countScores(List<String> list, List<Integer> neglist) {
 		float sumScores = 0;
