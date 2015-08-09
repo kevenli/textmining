@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.BufferedReader;
 //import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.List;
@@ -47,8 +49,9 @@ public class Segment {
 	 */
 	public void initNegtive() {
 		try {
-			File file = new File("negtive.txt");
-			BufferedReader br = Files.newBufferedReader(file.toPath(), Charset.forName("GBK"));
+			InputStream input = getClass().getResourceAsStream("negtive.txt");
+			InputStreamReader reader = new InputStreamReader(input, Charset.forName("GBK"));
+			BufferedReader br = new BufferedReader(reader);
 			String s = null;
 			if ((s = br.readLine())!= null) {
 				negtiveEnum = s.split("，");
@@ -66,8 +69,9 @@ public class Segment {
 	public void initConjunction() {
 		conSet = new HashSet<ConjunctionClassify>();
 		try {
-			File file = new File("conjunction.txt");
-			BufferedReader br = Files.newBufferedReader(file.toPath(), Charset.forName("GBK"));
+			InputStream input = getClass().getResourceAsStream("conjunction.txt");
+			InputStreamReader reader = new InputStreamReader(input, Charset.forName("GBK"));
+			BufferedReader br = new BufferedReader(reader);
 			String s = null;
 			while ((s = br.readLine())!= null) {
 				String []elementEnum = s.split("\t");
@@ -87,8 +91,9 @@ public class Segment {
 	public void initPolar() {
 		polarMap = new HashMap<String, Dict>();
 		try {
-			File file = new File("dict.txt");
-			BufferedReader br = Files.newBufferedReader(file.toPath(), Charset.forName("GBK"));
+			InputStream input = getClass().getResourceAsStream("dict.txt");
+			InputStreamReader reader = new InputStreamReader(input, Charset.forName("GBK"));
+			BufferedReader br = new BufferedReader(reader);
 			String s = null;
 			while ((s = br.readLine()) != null) {
 				String []element = s.split("\t");
